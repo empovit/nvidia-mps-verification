@@ -1,0 +1,7 @@
+version: v1
+sharing:
+  mps:
+    failRequestsGreaterThanOne: true
+    resources:
+    - name: nvidia.com/gpu
+      replicas: 10
