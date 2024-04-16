@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nvidia-plugin-test
 spec:
-  replicas: 31
+  replicas: 5
   selector:
     matchLabels:
       app: nvidia-plugin-test
