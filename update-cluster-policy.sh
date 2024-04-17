@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 set -o pipefail
 
 oc delete clusterpolicy gpu-cluster-policy --ignore-not-found

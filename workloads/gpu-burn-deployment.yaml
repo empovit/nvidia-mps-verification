@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nvidia-plugin-burn-test
+  labels:
+    app: nvidia-plugin-burn-test
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nvidia-plugin-burn-test
+  template:
+    metadata:
+      labels:
+        app: nvidia-plugin-burn-test
+    spec:
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: gpu-burn
+          image: quay.io/vemporop/gpu-burn:cuda12.1.0-ubi8
+          command:
+            - ./gpu_burn
+            - -d
+            - "3600"
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false

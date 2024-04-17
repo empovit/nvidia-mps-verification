@@ -3,17 +3,17 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mps-test-service-account
-  namespace: mps-test
+  namespace: mps
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: mps-test-privileged-role-binding
-  namespace: mps-test
+  namespace: mps
 subjects:
 - kind: ServiceAccount
   name: mps-test-service-account
-  namespace: mps-test
+  namespace: mps
 roleRef:
   kind: ClusterRole
   name: system:openshift:scc:privileged
@@ -23,7 +23,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: sharing-demo-pod
-  namespace: mps-test
+  namespace: mps
 spec:
   serviceAccountName: mps-test-service-account
   restartPolicy: OnFailure
@@ -33,7 +33,7 @@ spec:
     args: ["--benchmark", "--numbodies=4226000"]
     resources:
       limits:
-        nvidia.com/gpu: 5
+        nvidia.com/gpu: 1
     securityContext:
       runAsUser: 0
       # runAsNonRoot: false
