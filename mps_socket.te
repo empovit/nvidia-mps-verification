@@ -1,0 +1,10 @@
+module mps_socket 1.0;
+
+require {
+	type container_t;
+	type spc_t;
+	class unix_stream_socket { read write };
+}
+
+#============= container_t ==============
+allow container_t spc_t:unix_stream_socket { read write };
