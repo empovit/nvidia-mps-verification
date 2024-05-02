@@ -1,7 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mps
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mps-test-service-account
+  namespace: mps
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: use-privileged-scc
+subjects:
+- kind: ServiceAccount
+  name: mps-test-service-account
+  namespace: mps
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nvidia-plugin-test
+  namespace: mps
   labels:
     app: nvidia-plugin-test
 spec:
@@ -14,6 +38,7 @@ spec:
       labels:
         app: nvidia-plugin-test
     spec:
+      serviceAccount: mps-test-service-account
       tolerations:
         - key: nvidia.com/gpu
           operator: Exists
@@ -27,13 +52,6 @@ spec:
           resources:
             limits:
               nvidia.com/gpu: 1
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-              # add:
-              #   - SYS_ADMIN
-            runAsNonRoot: true
-            seccompProfile:
-              type: RuntimeDefault
-            allowPrivilegeEscalation: false
+      securityContext:
+        seccompProfile:
+          type: Unconfined

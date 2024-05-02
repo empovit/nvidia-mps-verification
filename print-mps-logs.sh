@@ -3,9 +3,9 @@
 set -e
 set -o pipefail
 
-NAMESPACE=nvidia-gpu-operator
+GPU_OPERATOR_NAMESPACE=${GPU_OPERATOR_NAMESPACE:-"nvidia-gpu-operator"}
 
-PODS=$(oc get pod -o name -n $NAMESPACE | grep 'nvidia-device-plugin-mps-control-daemon')
+PODS=$(oc get pod -o name -n $GPU_OPERATOR_NAMESPACE | grep 'nvidia-device-plugin-mps-control-daemon')
 for pod in $PODS; do
-    oc logs $pod -n $NAMESPACE
+    oc logs $pod -n $GPU_OPERATOR_NAMESPACE
 done

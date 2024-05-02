@@ -3,9 +3,9 @@
 set -e
 set -o pipefail
 
-NAMESPACE=nvidia-gpu-operator
+GPU_OPERATOR_NAMESPACE=${GPU_OPERATOR_NAMESPACE:-"nvidia-gpu-operator"}
 
-PODS=$(oc get pod -o name -n $NAMESPACE | grep 'nvidia-device-plugin-mps-control-daemon')
+PODS=$(oc get pod -o name -n $GPU_OPERATOR_NAMESPACE | grep 'nvidia-device-plugin-mps-control-daemon')
 for pod in $PODS; do
-    oc exec -ti $pod -n $NAMESPACE -- /bin/sh -c "export CUDA_MPS_PIPE_DIRECTORY=/mps/nvidia.com/gpu/pipe; echo \"$@\" | nvidia-cuda-mps-control"
+    oc exec -ti $pod -n $GPU_OPERATOR_NAMESPACE -- /bin/sh -c "export CUDA_MPS_PIPE_DIRECTORY=/mps/nvidia.com/gpu/pipe; echo \"$@\" | nvidia-cuda-mps-control"
 done

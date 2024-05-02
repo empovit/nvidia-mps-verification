@@ -3,5 +3,5 @@
 set -e
 set -o pipefail
 
-NAMESPACE=nvidia-gpu-operator
-oc get pod -n $NAMESPACE
+GPU_OPERATOR_NAMESPACE=${GPU_OPERATOR_NAMESPACE:-"nvidia-gpu-operator"}
+oc get pod -n $GPU_OPERATOR_NAMESPACE
