@@ -53,5 +53,9 @@ spec:
             limits:
               nvidia.com/gpu: 1
       securityContext:
+        capabilities:
+          add:
+            - ALL
+            - SYS_ADMIN
         seccompProfile:
           type: Unconfined
