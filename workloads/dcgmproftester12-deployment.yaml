@@ -54,6 +54,4 @@ spec:
             limits:
               nvidia.com/gpu: 1
           securityContext:
-            capabilities:
-              add: ["SYS_ADMIN"]
-            # privileged: true
+            privileged: true
