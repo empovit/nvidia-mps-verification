@@ -18,9 +18,9 @@ roleRef:
   kind: ClusterRole
   name: system:openshift:scc:privileged
 subjects:
-- kind: ServiceAccount
-  name: mps-test-service-account
-  namespace: mps
+  - kind: ServiceAccount
+    name: mps-test-service-account
+    namespace: mps
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -54,6 +54,6 @@ spec:
             limits:
               nvidia.com/gpu: 1
           securityContext:
-            privileged: true
-
-
+            capabilities:
+              add: ["SYS_ADMIN"]
+            # privileged: true
