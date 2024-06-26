@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mps-np
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nvidia-plugin-test
+  namespace: mps-np
+  labels:
+    app: nvidia-plugin-test
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nvidia-plugin-test
+  template:
+    metadata:
+      labels:
+        app: nvidia-plugin-test
+    spec:
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: dcgmproftester12
+          image: nvcr.io/nvidia/cloud-native/dcgm:3.3.3-1-ubi9
+          command: ["/bin/sh", "-c"]
+          args:
+            - while true; do /usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 300; sleep 30; done
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false

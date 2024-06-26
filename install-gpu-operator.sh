@@ -14,7 +14,7 @@ case ${deploy_cp:0:1} in
     y|Y|yes|Yes )
         sleep 20
         CSV_NAME=$(oc get csv -n ${GPU_OPERATOR_NAMESPACE} -o name)
-        oc wait --for=jsonpath='{.status.phase}'=Succeeded --timeout=360s -n ${GPU_OPERATOR_NAMESPACE} ${CSV_NAME}
+        oc wait --for=jsonpath='{.status.reason}'=InstallSucceeded --timeout=360s -n ${GPU_OPERATOR_NAMESPACE} ${CSV_NAME}
         ./update-mps-config.sh ${MPS_CONFIG_FILE}
         ./update-cluster-policy.sh
     ;;
