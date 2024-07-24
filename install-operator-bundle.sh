@@ -8,7 +8,7 @@ BUNDLE=${BUNDLE:-"registry.gitlab.com/nvidia/kubernetes/gpu-operator/staging/gpu
 
 oc create namespace $GPU_OPERATOR_NAMESPACE
 
-# echo "WARNING: Will apply 'pod-security.kubernetes.io/enforce=privileged' label to the namespace"
-# oc label namespace $GPU_OPERATOR_NAMESPACE pod-security.kubernetes.io/enforce=privileged  --overwrite
+echo "WARNING: Will apply 'pod-security.kubernetes.io/enforce=privileged' label to the namespace"
+oc label namespace $GPU_OPERATOR_NAMESPACE pod-security.kubernetes.io/enforce=privileged  --overwrite
 
 operator-sdk run bundle --timeout=20m -n $GPU_OPERATOR_NAMESPACE --install-mode OwnNamespace ${BUNDLE}
