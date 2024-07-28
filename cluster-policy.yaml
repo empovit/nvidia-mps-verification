@@ -61,6 +61,9 @@ spec:
     virtualTopology:
       config: ''
   devicePlugin:
+    repository: quay.io/vemporop
+    image: nvidia-k8s-device-plugin
+    version: 5eae3e70-ubi8
     config:
       default: plugin-config.yaml
       name: plugin-config
