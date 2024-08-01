@@ -63,7 +63,7 @@ spec:
   devicePlugin:
     repository: quay.io/vemporop
     image: nvidia-k8s-device-plugin
-    version: ddf3b926-ubi8
+    version: 5e34910e-ubi8
     config:
       default: plugin-config.yaml
       name: plugin-config
