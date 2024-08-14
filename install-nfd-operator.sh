@@ -11,6 +11,7 @@ sleep 20
 CSV_NAME=$(oc get csv -n ${NFD_OPERATOR_NAMESPACE} -o name)
 
 oc wait --for=jsonpath='{.status.reason}'=InstallSucceeded --timeout=360s -n ${NFD_OPERATOR_NAMESPACE} ${CSV_NAME}
+sleep 30
 
 NFD_INSTANCE=$(oc get ${CSV_NAME} -n ${NFD_OPERATOR_NAMESPACE} -o jsonpath='{.metadata.annotations.alm-examples}' | jq -r 'map(select(.kind == "NodeFeatureDiscovery")) | .[0]')
 oc apply -f - <<EOF

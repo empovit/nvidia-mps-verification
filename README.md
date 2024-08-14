@@ -1,3 +1,74 @@
+## Running the example
+
+1. Install the NFD Operator:
+
+```console
+$ ./install-nfd-operator.sh
+```
+
+2. Install the NVIDIA GPU Operator:
+
+```console
+$ ./install-gpu-operator.sh
+```
+
+3. Run a sample workload:
+
+```console
+$ oc apply -f workloads/dcgmproftester12-deployment-nonprivileged.yaml
+```
+
+4. Make sure the pods are running:
+
+```console
+$ oc get pod -n mps-np
+NAME                                  READY   STATUS    RESTARTS   AGE
+nvidia-plugin-test-665d6f5c58-42tgg   1/1     Running   0          21s
+nvidia-plugin-test-665d6f5c58-4jfjm   1/1     Running   0          21s
+nvidia-plugin-test-665d6f5c58-hc4zq   1/1     Running   0          21s
+nvidia-plugin-test-665d6f5c58-lnvcf   1/1     Running   0          21s
+nvidia-plugin-test-665d6f5c58-tgbj6   1/1     Running   0          21s
+```
+
+5. Observe the processes with `nvidia-smi`. Notice the `M+C` type and the MPS server:
+
+```console
+$ ./nvidia-smi.sh
+Wed Aug 14 14:48:14 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-PCIE-40GB          On  |   00000000:06:00.0 Off |                    0 |
+| N/A   56C    P0            244W /  250W |    2323MiB /  40960MiB |    100%   E. Process |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A    120344      C   nvidia-cuda-mps-server                         30MiB |
+|    0   N/A  N/A    130275    M+C   /usr/bin/dcgmproftester12                     456MiB |
+|    0   N/A  N/A    130276    M+C   /usr/bin/dcgmproftester12                     456MiB |
+|    0   N/A  N/A    130281    M+C   /usr/bin/dcgmproftester12                     456MiB |
+|    0   N/A  N/A    130284    M+C   /usr/bin/dcgmproftester12                     456MiB |
+|    0   N/A  N/A    130286    M+C   /usr/bin/dcgmproftester12                     456MiB |
++-----------------------------------------------------------------------------------------+
+```
+
+Also, on the node the pipe directory is expected to have the right SELinux label `container_file_t`:
+
+```console
+$ ls -Z1 /run/nvidia/mps/nvidia.com/gpu/
+system_u:object_r:container_var_run_t:s0 log
+   system_u:object_r:container_file_t:s0 pipe
+```
+
 ## Troubleshooting SELinux
 
 1. Open a debug session on the node:
