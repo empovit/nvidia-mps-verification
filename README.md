@@ -1,27 +1,35 @@
+# NVIDIA MPS on Red Hat OpenShift with the NVIDIA GPU Operator
+
+**Warning**: Some of the scripts assume a single-node cluster -
+Single-Node OpenShift (SNO) or OpenShift Local (aka CRC). Be careful.
+
 ## Running the example
 
 1. Install the NFD Operator:
 
 ```console
-$ ./install-nfd-operator.sh
+./install-nfd-operator.sh
 ```
 
 2. Install the NVIDIA GPU Operator:
 
 ```console
-$ ./install-gpu-operator.sh
+./install-gpu-operator.sh
 ```
 
 3. Run a sample workload:
 
 ```console
-$ oc apply -f workloads/dcgmproftester12-deployment-nonprivileged.yaml
+oc apply -f workloads/dcgmproftester12-deployment-nonprivileged.yaml
 ```
 
 4. Make sure the pods are running:
 
 ```console
-$ oc get pod -n mps-np
+oc get pod -n mps-np
+```
+
+```console
 NAME                                  READY   STATUS    RESTARTS   AGE
 nvidia-plugin-test-665d6f5c58-42tgg   1/1     Running   0          21s
 nvidia-plugin-test-665d6f5c58-4jfjm   1/1     Running   0          21s
@@ -33,7 +41,10 @@ nvidia-plugin-test-665d6f5c58-tgbj6   1/1     Running   0          21s
 5. Observe the processes with `nvidia-smi`. Notice the `M+C` type and the MPS server:
 
 ```console
-$ ./nvidia-smi.sh
+./nvidia-smi.sh
+```
+
+```console
 Wed Aug 14 14:48:14 2024
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 550.90.07              Driver Version: 550.90.07      CUDA Version: 12.4     |
@@ -61,10 +72,13 @@ Wed Aug 14 14:48:14 2024
 +-----------------------------------------------------------------------------------------+
 ```
 
-Also, on the node the pipe directory is expected to have the right SELinux label `container_file_t`:
+Also, _on the node_, the pipe directory is expected to have the right SELinux label `container_file_t`:
 
 ```console
-$ ls -Z1 /run/nvidia/mps/nvidia.com/gpu/
+ls -Z1 /run/nvidia/mps/nvidia.com/gpu/
+```
+
+```console
 system_u:object_r:container_var_run_t:s0 log
    system_u:object_r:container_file_t:s0 pipe
 ```
@@ -74,19 +88,19 @@ system_u:object_r:container_var_run_t:s0 log
 1. Open a debug session on the node:
 
    ```console
-   $ oc debug node/<node>
+   oc debug node/<node>
    ```
 
 2. Temporarily disable _dontaudit_ rules, allowing all denials to be logged:
 
    ```console
-   # semodule -DB
+   semodule -DB
    ```
 
 3. Temporarily enable full-path auditing:
 
    ```console
-   # auditctl -w /etc/shadow -p w -k shadow-write
+   auditctl -w /etc/shadow -p w -k shadow-write
    ```
 
 4. Perform the actions you think are denied by SELinux.
@@ -94,7 +108,10 @@ system_u:object_r:container_var_run_t:s0 log
 5. Run `ausearch`:
 
    ```console
-   # ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -ts recent
+   ausearch -m AVC,USER_AVC,SELINUX_ERR,USER_SELINUX_ERR -ts recent
+   ```
+
+   ```console
    ... skipped ...
    ----
    time->Sun Apr 21 11:33:12 2024
@@ -109,7 +126,10 @@ system_u:object_r:container_var_run_t:s0 log
    * Press &lt;Ctrl-D&gt;
 
    ```console
-   sh-5.1# audit2why
+   audit2why
+   ```
+
+   ```console
    ----
    time->Sun Apr 21 11:33:12 2024
    type=PROCTITLE msg=audit(1713699192.296:14033): proctitle=2F7573722F62696E2F6463676D70726F667465737465723132002D2D6E6F2D6463676D2D76616C69646174696F6E002D740031303034002D6400333030
@@ -130,7 +150,10 @@ system_u:object_r:container_var_run_t:s0 log
    * Press &lt;Ctrl-D&gt;
 
    ```console
-   # audit2allow
+   audit2allow
+   ```
+
+   ```console
    ----
    time->Sun Apr 21 11:33:12 2024
    type=PROCTITLE msg=audit(1713699192.296:14033): proctitle=2F7573722F62696E2F6463676D70726F667465737465723132002D2D6E6F2D6463676D2D76616C69646174696F6E002D740031303034002D6400333030
@@ -140,13 +163,14 @@ system_u:object_r:container_var_run_t:s0 log
 
    #============= container_t ==============
    allow container_t spc_t:unix_stream_socket { read write };
+   ```
 
 8. [Build and install](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.8.x?topic=storage-creating-selinux-policy-module) an SELinux module on the OpenShift node from the [mps_socket.te](./mps_socket.te) type enforcement file:
 
    ```console
-   # checkmodule -M -m -o mps_socket.mod mps_socket.te
-   # semodule_package -o mps_socket.pp -m mps_socket.mod
-   # semodule -i mps_socket.pp
+   checkmodule -M -m -o mps_socket.mod mps_socket.te
+   semodule_package -o mps_socket.pp -m mps_socket.mod
+   semodule -i mps_socket.pp
    ```
 
 ## Useful Resources

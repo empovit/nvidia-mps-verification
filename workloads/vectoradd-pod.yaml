@@ -1,20 +1,29 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: gpu-test
+---
+apiVersion: v1
 kind: Pod
 metadata:
-  name: cuda-vectoradd
+  name: vectoradd
+  namespace: gpu-test
 spec:
   restartPolicy: OnFailure
   containers:
-  - name: cuda-vectoradd
-    image: "nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda11.7.1-ubuntu20.04"
-    resources:
-      limits:
-        nvidia.com/gpu: 2
-  securityContext:
-    capabilities:
-      drop:
-        - ALL
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-    allowPrivilegeEscalation: false
+    - name: vectoradd
+      image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda12.5.0-ubi8
+      command: ["/bin/sh", "-c"]
+      args:
+        - "nvidia-smi -L && echo && /cuda-samples/sample"
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+      securityContext:
+        capabilities:
+          drop:
+            - ALL
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
