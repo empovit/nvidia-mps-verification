@@ -1,5 +1,9 @@
 # NVIDIA MPS on Red Hat OpenShift with the NVIDIA GPU Operator
 
+This document describe the procedure for basic sanity testing of
+[NVIDIA Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/)
+on Red Hat OpenShift, and includes useful scripts.
+
 **Warning**: Some of the scripts assume a single-node cluster -
 Single-Node OpenShift (SNO) or OpenShift Local (aka CRC). Be careful.
 
