@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-#========================================================
-# Copy from nvcr.io/nvidia/cloud-native/dcgm:3.3.3-1-ubi9
-# and add to PATH:
-# - /usr/bin/dcgmproftester12
-# - /usr/lib64/libdcgm*
-#========================================================
+# Install DCGM:
+# https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/getting-started.html#installation
 
 COUNT=${COUNT:-1}
 DURATION=${DURATION:-180}
@@ -17,7 +13,7 @@ for i in $(seq 1 $COUNT)
 do
 	echo
 	echo "=== client $i ==="
-        ./dcgmproftester12 "${DCGM_ARGS[@]}" &
+        /usr/bin/dcgmproftester12 "${DCGM_ARGS[@]}" &
 	sleep 5
 done
 

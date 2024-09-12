@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Requires GPU burn binaries
+# https://github.com/wilicc/gpu-burn
+
 COUNT=${COUNT:-1}
 DURATION=${DURATION:-180}
 MEM_FACTOR=${MEM_FACTOR:-1}
