@@ -4,7 +4,7 @@
 # https://github.com/wilicc/gpu-burn
 
 COUNT=${COUNT:-1}
-DURATION=${DURATION:-180}
+DURATION=${DURATION:-120}
 MEM_FACTOR=${MEM_FACTOR:-1}
 MEM=$((100/COUNT*MEM_FACTOR))
 
