@@ -37,3 +37,18 @@ Reference: [NVIDIA Multi-Process Service](https://docs.nvidia.com/deploy/mps/).
    ```console
    echo get_default_active_thread_percentage | nvidia-cuda-mps-control
    ```
+
+6. Run clients.
+
+7. Observe client and server processes in `nvidia-smi`, e.g.
+
+   ```console
+   watch -n5 nvidia-smi
+   ```
+
+8. Shut down the control daemon.
+   If it runs in the background, send `quit` command:
+
+   ```console
+   echo quit | nvidia-cuda-mps-control
+   ```
