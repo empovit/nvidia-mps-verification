@@ -85,6 +85,8 @@ sudo dnf insatll -y kmod-nvidia-latest-dkms
 git clone https://github.com/wilicc/gpu-burn.git
 cd gpu-burn
 make
-./gpu-burn
+
+## Run for 120 sec
+./gpu_burn 120
 ```
 
