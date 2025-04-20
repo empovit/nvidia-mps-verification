@@ -2,7 +2,7 @@
 
 Reference: [NVIDIA Multi-Process Service](https://docs.nvidia.com/deploy/mps/).
 
-1. Install NVIDIA drivers and CUDA. E.g. for [Red Hat Enterprise Linux]:
+1. Install NVIDIA drivers and CUDA. E.g. for Red Hat Enterprise Linux:
    [drivers](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html#preparation),
    [CUDA](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#rhel-rocky-installation).
 
