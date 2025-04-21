@@ -208,3 +208,45 @@ nohup ./gpu_burn -m 70% 60 &
 |    0   N/A  N/A           43706    M+C   ./gpu_burn                             6972MiB |
 +-----------------------------------------------------------------------------------------+
 ```
+
+13. Variable memory limits, per client:
+
+Define a `CUDA_MPS_PINNED_DEVICE_MEM_LIMIT` per client, e.g. 10GB, 5GB and 15GB (on a 32GB GPU):
+
+```console
+export CUDA_MPS_PINNED_DEVICE_MEM_LIMIT=''0=10GB''
+nohup ./gpu_burn 120 &
+
+export CUDA_MPS_PINNED_DEVICE_MEM_LIMIT=''0=5GB''
+nohup ./gpu_burn 120 &
+
+export CUDA_MPS_PINNED_DEVICE_MEM_LIMIT=''0=15GB''
+nohup ./gpu_burn 120 &
+```
+
+MPS is enforcing the memory limit for each client:
+
+```console
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.133.20             Driver Version: 570.133.20     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-SXM2-32GB           Off |   00000000:09:00.0 Off |                    0 |
+| N/A   47C    P0            299W /  300W |   27093MiB /  32768MiB |	100%	  Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage	  |
+|=========================================================================================|
+|    0   N/A  N/A           44789      C   nvidia-cuda-mps-server                   30MiB |
+|    0   N/A  N/A           45022    M+C   ./gpu_burn                             4412MiB |
+|    0   N/A  N/A           45029    M+C   ./gpu_burn                            13628MiB |
+|    0   N/A  N/A           45032    M+C   ./gpu_burn                             9020MiB |
++-----------------------------------------------------------------------------------------+
+```
