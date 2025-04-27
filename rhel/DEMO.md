@@ -18,7 +18,7 @@ sudo dnf install -y git make g++ kernel-devel-matched kernel-headers cuda-toolki
 
 # For proprietary kernel modules
 sudo dnf module install nvidia-driver:latest-dkms
-sudo dnf insatll -y kmod-nvidia-latest-dkms
+sudo dnf install -y kmod-nvidia-latest-dkms
 
 # For open kernel modules
 # sudo dnf module -y install nvidia-driver:open-dkms
