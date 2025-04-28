@@ -221,9 +221,12 @@ nohup ./gpu_burn -m 70% 60 &
 
 13. Variable memory limits, per client:
 
-Define a `CUDA_MPS_PINNED_DEVICE_MEM_LIMIT` per client, e.g. 10GB, 5GB and 15GB (on a 32GB GPU):
+Increase pinned memory limit on the server, and define a `CUDA_MPS_PINNED_DEVICE_MEM_LIMIT` per client, e.g. 10GB, 5GB and 15GB (on a 32GB GPU):
 
 ```console
+mps_server_pid=$(echo get_server_list | nvidia-cuda-mps-control)
+echo set_device_pinned_mem_limit $mps_server_pid 0 16GB | nvidia-cuda-mps-control
+
 export CUDA_MPS_PINNED_DEVICE_MEM_LIMIT=''0=10GB''
 nohup ./gpu_burn 120 &
 
