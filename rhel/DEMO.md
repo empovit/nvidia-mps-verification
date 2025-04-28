@@ -17,15 +17,25 @@ sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.
 sudo dnf install -y git make g++ kernel-devel-matched kernel-headers cuda-toolkit nvidia-driver-cuda
 
 # For proprietary kernel modules
-sudo dnf module install nvidia-driver:latest-dkms
+sudo dnf remove -y kmod-nvidia-open-dkms
+sudo dnf module remove -y nvidia-driver:open-dkms
+sudo dnf module reset -y nvidia-driver
+sudo dnf module install -y nvidia-driver:latest-dkms
 sudo dnf install -y kmod-nvidia-latest-dkms
 
 # For open kernel modules
+# sudo dnf remove -y kmod-nvidia-latest-dkms
+# sudo dnf module remove -y nvidia-driver:latest-dkms
+# sudo dnf module reset -y nvidia-driver
 # sudo dnf module -y install nvidia-driver:open-dkms
 # sudo dnf install -y kmod-nvidia-open-dkms
 ```
 
-2. Reboot may be required.
+2. Reboot:
+
+```console
+sudo systemctl reboot
+```
 
 3. Set MPS pipe and log directories:
 
